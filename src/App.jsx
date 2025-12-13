@@ -2,6 +2,15 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './App.css';
 import { formatText } from './api';
 import { MODES, TONES } from './prompts';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 // Helper functions for character/word count
 const getWordCount = (text) => text.trim() ? text.trim().split(/\s+/).length : 0;
@@ -161,31 +170,31 @@ function App() {
         <div className="controls">
           <div className="control-group">
             <label htmlFor="tone">Tone:</label>
-            <select
-              id="tone"
-              value={tone}
-              onChange={(e) => setTone(e.target.value)}
-              className="select"
-            >
-              <option value={TONES.PROFESSIONAL}>Professional</option>
-              <option value={TONES.LAID_BACK}>Laid-back</option>
-              <option value={TONES.CASUAL}>Casual</option>
-            </select>
+            <Select value={tone} onValueChange={setTone}>
+              <SelectTrigger id="tone">
+                <SelectValue placeholder="Select tone" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={TONES.PROFESSIONAL}>Professional</SelectItem>
+                <SelectItem value={TONES.LAID_BACK}>Laid-back</SelectItem>
+                <SelectItem value={TONES.CASUAL}>Casual</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="control-group">
             <label htmlFor="mode">Mode:</label>
-            <select
-              id="mode"
-              value={mode}
-              onChange={(e) => setMode(e.target.value)}
-              className="select"
-            >
-              <option value={MODES.FORMAT}>Format</option>
-              <option value={MODES.SUMMARIZE}>Summarize</option>
-              <option value={MODES.FORMAT_AS_EMAIL}>Format as Email</option>
-              <option value={MODES.FORMAT_AS_SLACK}>Format as Slack Message</option>
-            </select>
+            <Select value={mode} onValueChange={setMode}>
+              <SelectTrigger id="mode">
+                <SelectValue placeholder="Select mode" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={MODES.FORMAT}>Format</SelectItem>
+                <SelectItem value={MODES.SUMMARIZE}>Summarize</SelectItem>
+                <SelectItem value={MODES.FORMAT_AS_EMAIL}>Format as Email</SelectItem>
+                <SelectItem value={MODES.FORMAT_AS_SLACK}>Format as Slack Message</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -201,33 +210,34 @@ function App() {
               {getCharCount(inputText)} chars • {getWordCount(inputText)} words
             </span>
           </label>
-          <textarea
+          <Textarea
             ref={inputRef}
             id="input"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Paste or type text here, or drag and drop a .txt file... (Press Enter to format)"
-            className="textarea"
             rows={8}
           />
         </div>
 
         <div className="button-group">
-          <button
+          <Button
             onClick={handleFormat}
             disabled={isLoading || !inputText.trim()}
-            className="format-button"
+            className="flex-1"
+            size="lg"
           >
             {isLoading ? 'Formatting...' : 'Format'}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleClear}
             disabled={isLoading}
-            className="clear-button"
+            variant="outline"
+            size="lg"
           >
             Clear
-          </button>
+          </Button>
         </div>
 
         <div className="output-area">
@@ -242,17 +252,17 @@ function App() {
           {lastError && (
             <div className="error-banner">
               <span className="error-message">{lastError}</span>
-              <button onClick={handleRetry} className="retry-button">
+              <Button onClick={handleRetry} variant="destructive" size="sm">
                 Retry
-              </button>
+              </Button>
             </div>
           )}
-          <textarea
+          <Textarea
             id="output"
             value={outputText}
             readOnly
             placeholder="Formatted text will appear here..."
-            className="textarea output"
+            className="bg-muted"
             rows={8}
           />
         </div>
