@@ -19,6 +19,7 @@ const getCharCount = (text) => text.length;
 function App() {
   const inputRef = useRef(null);
   const outputRef = useRef(null);
+  const containerRef = useRef(null);
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
 
@@ -103,6 +104,12 @@ function App() {
     if (inputRef.current) {
       inputRef.current.focus();
     }
+    // Scroll to top
+    if (containerRef.current) {
+      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     showToast('Cleared');
   }, [showToast]);
 
@@ -169,7 +176,7 @@ function App() {
 
   return (
     <div className="app">
-      <div className="container max-w-full">
+      <div className="container max-w-full" ref={containerRef}>
         <header className="header">
           <div className="header-left">
             <h1>Clip It</h1>
@@ -207,73 +214,79 @@ function App() {
           </div>
         </header>
 
-        <div
-          className={`input-area ${isDragging ? 'dragging' : ''}`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <label htmlFor="input" className="label">
-            Input Text {isDragging && <span className="drag-hint">Drop .txt file here</span>}
-            <span className="count-badge">
-              {getCharCount(inputText)} chars • {getWordCount(inputText)} words
-            </span>
-          </label>
-          <Textarea
-            ref={inputRef}
-            id="input"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Paste or type text here, or drag and drop a .txt file... (Press Enter to format)"
-            rows={8}
-          />
-        </div>
+        {/* Input/Output Container - Single column on mobile, side-by-side on desktop */}
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+          {/* Input and Buttons Group */}
+          <div className="flex flex-col flex-1 gap-4">
+            <div
+              className={`input-area ${isDragging ? 'dragging' : ''}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <label htmlFor="input" className="label">
+                Input Text {isDragging && <span className="drag-hint">Drop .txt file here</span>}
+                <span className="count-badge">
+                  {getCharCount(inputText)} chars • {getWordCount(inputText)} words
+                </span>
+              </label>
+              <Textarea
+                ref={inputRef}
+                id="input"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Paste or type text here, or drag and drop a .txt file... (Press Enter to format)"
+                rows={8}
+              />
+            </div>
 
-        <div className="button-group">
-          <Button
-            onClick={handleFormat}
-            disabled={isLoading || !inputText.trim()}
-            className="flex-1"
-            size="lg"
-          >
-            {isLoading ? 'Formatting...' : 'Format'}
-          </Button>
-          <Button
-            onClick={handleClear}
-            disabled={isLoading}
-            variant="outline"
-            size="lg"
-          >
-            Clear
-          </Button>
-        </div>
-
-        <div className="output-area" ref={outputRef}>
-          <label htmlFor="output" className="label">
-            Output
-            {outputText && (
-              <span className="count-badge">
-                {getCharCount(outputText)} chars • {getWordCount(outputText)} words
-              </span>
-            )}
-          </label>
-          {lastError && (
-            <div className="error-banner">
-              <span className="error-message">{lastError}</span>
-              <Button onClick={handleRetry} variant="destructive" size="sm">
-                Retry
+            <div className="button-group">
+              <Button
+                onClick={handleFormat}
+                disabled={isLoading || !inputText.trim()}
+                size="lg"
+              >
+                {isLoading ? 'Formatting...' : 'Format'}
+              </Button>
+              <Button
+                onClick={handleClear}
+                disabled={isLoading}
+                variant="outline"
+                size="lg"
+              >
+                Clear
               </Button>
             </div>
-          )}
-          <Textarea
-            id="output"
-            value={outputText}
-            readOnly
-            placeholder="Formatted text will appear here..."
-            className="bg-muted"
-            rows={8}
-          />
+          </div>
+
+          {/* Output Group */}
+          <div className="output-area flex-1" ref={outputRef}>
+            <label htmlFor="output" className="label">
+              Output
+              {outputText && (
+                <span className="count-badge">
+                  {getCharCount(outputText)} chars • {getWordCount(outputText)} words
+                </span>
+              )}
+            </label>
+            {lastError && (
+              <div className="error-banner">
+                <span className="error-message">{lastError}</span>
+                <Button onClick={handleRetry} variant="destructive" size="sm">
+                  Retry
+                </Button>
+              </div>
+            )}
+            <Textarea
+              id="output"
+              value={outputText}
+              readOnly
+              placeholder="Formatted text will appear here..."
+              className="bg-muted"
+              rows={8}
+            />
+          </div>
         </div>
       </div>
 
