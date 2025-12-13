@@ -1,0 +1,61 @@
+{
+  "name": "clip",
+  "productName": "Clip It",
+  "version": "1.0.0",
+  "description": "Desktop helper app for text formatting with AI",
+  "main": "main.js",
+  "build": {
+    "appId": "com.clip.app",
+    "productName": "Clip It",
+    "mac": {
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "icon": "assets/icon.png"
+    }
+  },
+  "scripts": {
+    "start": "electron .",
+    "dev": "concurrently \"pnpm run dev:react\" \"wait-on http://localhost:1234 && electron .\"",
+    "dev:react": "PORT=1234 react-scripts start",
+    "build": "react-scripts build",
+    "build:electron": "pnpm run build && electron-builder"
+  },
+  "keywords": [
+    "electron",
+    "react",
+    "text-formatting"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "openai": "^6.10.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "concurrently": "^8.2.0",
+    "electron": "^39.2.6",
+    "electron-builder": "^24.6.4",
+    "react-scripts": "5.0.1",
+    "wait-on": "^7.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
