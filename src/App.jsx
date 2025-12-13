@@ -18,6 +18,7 @@ const getCharCount = (text) => text.length;
 
 function App() {
   const inputRef = useRef(null);
+  const outputRef = useRef(null);
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
 
@@ -79,6 +80,13 @@ function App() {
           showToast('Formatted text copied to clipboard!');
         });
       }
+
+      // Scroll to output area after a brief delay to ensure DOM update
+      setTimeout(() => {
+        if (outputRef.current) {
+          outputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     } catch (error) {
       const errorMessage = error.message || 'An unknown error occurred';
       setLastError(errorMessage);
@@ -241,7 +249,7 @@ function App() {
           </Button>
         </div>
 
-        <div className="output-area">
+        <div className="output-area" ref={outputRef}>
           <label htmlFor="output" className="label">
             Output
             {outputText && (
