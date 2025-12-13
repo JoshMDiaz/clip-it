@@ -9,7 +9,7 @@ import { getPrompt } from './prompts';
 
 // Configuration for model selection
 const config = {
-  MODEL: process.env.REACT_APP_MODEL || 'gpt-4' // Default model, can be overridden
+  MODEL: import.meta.env.VITE_MODEL || 'gpt-4' // Default model, can be overridden
 };
 
 /**

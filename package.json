@@ -20,10 +20,11 @@
   },
   "scripts": {
     "start": "electron .",
-    "dev": "concurrently \"pnpm run dev:react\" \"wait-on http://localhost:1234 && electron .\"",
-    "dev:react": "PORT=1234 react-scripts start",
-    "build": "react-scripts build",
-    "build:electron": "pnpm run build && electron-builder"
+    "dev": "concurrently \"pnpm run dev:vite\" \"wait-on http://localhost:1234 && electron .\"",
+    "dev:vite": "vite",
+    "build": "vite build",
+    "build:electron": "pnpm run build && electron-builder",
+    "preview": "vite preview"
   },
   "keywords": [
     "electron",
@@ -38,12 +39,21 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@tailwindcss/vite": "^4.1.18",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^5.1.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "concurrently": "^8.2.0",
     "electron": "^39.2.6",
     "electron-builder": "^24.6.4",
-    "react-scripts": "5.0.1",
+    "lucide-react": "^0.561.0",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^4.1.18",
+    "vite": "^7.2.7",
     "wait-on": "^7.0.1"
   },
   "browserslist": {
