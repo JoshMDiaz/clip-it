@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Copy } from 'lucide-react';
 
 // Helper functions for character/word count
 const getWordCount = (text) => text.trim() ? text.trim().split(/\s+/).length : 0;
@@ -112,6 +113,25 @@ function App() {
     }
     showToast('Cleared');
   }, [showToast]);
+
+  const handleCopyOutput = useCallback(async () => {
+    if (!outputText.trim()) {
+      showToast('No output to copy');
+      return;
+    }
+
+    try {
+      if (window.electronAPI) {
+        await window.electronAPI.copyToClipboard(outputText);
+        showToast('Copied to clipboard!');
+      } else {
+        await navigator.clipboard.writeText(outputText);
+        showToast('Copied to clipboard!');
+      }
+    } catch (error) {
+      showToast('Failed to copy to clipboard');
+    }
+  }, [outputText, showToast]);
 
   const handleRetry = useCallback(() => {
     if (lastError && inputText.trim()) {
@@ -262,14 +282,27 @@ function App() {
 
           {/* Output Group */}
           <div className="output-area flex-1" ref={outputRef}>
-            <label htmlFor="output" className="label">
-              Output
-              {outputText && (
-                <span className="count-badge">
-                  {getCharCount(outputText)} chars • {getWordCount(outputText)} words
-                </span>
-              )}
-            </label>
+            <div className="label flex items-center justify-between">
+              <label htmlFor="output">Output</label>
+              <div className="flex items-center gap-2">
+                {outputText && (
+                  <span className="count-badge">
+                    {getCharCount(outputText)} chars • {getWordCount(outputText)} words
+                  </span>
+                )}
+                {outputText && (
+                  <Button
+                    onClick={handleCopyOutput}
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    title="Copy output"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
             {lastError && (
               <div className="error-banner">
                 <span className="error-message">{lastError}</span>
