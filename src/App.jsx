@@ -161,42 +161,43 @@ function App() {
 
   return (
     <div className="app">
-      <div className="container">
+      <div className="container max-w-full">
         <header className="header">
-          <h1>Clip It</h1>
-          <p className="subtitle">Text Formatter</p>
+          <div className="header-left">
+            <h1>Clip It</h1>
+            <p className="subtitle">Text Formatter</p>
+          </div>
+          <div className="controls">
+            <div className="control-group">
+              <label htmlFor="tone">Tone:</label>
+              <Select value={tone} onValueChange={setTone}>
+                <SelectTrigger id="tone">
+                  <SelectValue placeholder="Select tone" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={TONES.PROFESSIONAL}>Professional</SelectItem>
+                  <SelectItem value={TONES.LAID_BACK}>Laid-back</SelectItem>
+                  <SelectItem value={TONES.CASUAL}>Casual</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="control-group">
+              <label htmlFor="mode">Mode:</label>
+              <Select value={mode} onValueChange={setMode}>
+                <SelectTrigger id="mode">
+                  <SelectValue placeholder="Select mode" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={MODES.FORMAT}>Format</SelectItem>
+                  <SelectItem value={MODES.SUMMARIZE}>Summarize</SelectItem>
+                  <SelectItem value={MODES.FORMAT_AS_EMAIL}>Format as Email</SelectItem>
+                  <SelectItem value={MODES.FORMAT_AS_SLACK}>Format as Slack Message</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </header>
-
-        <div className="controls">
-          <div className="control-group">
-            <label htmlFor="tone">Tone:</label>
-            <Select value={tone} onValueChange={setTone}>
-              <SelectTrigger id="tone">
-                <SelectValue placeholder="Select tone" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={TONES.PROFESSIONAL}>Professional</SelectItem>
-                <SelectItem value={TONES.LAID_BACK}>Laid-back</SelectItem>
-                <SelectItem value={TONES.CASUAL}>Casual</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="control-group">
-            <label htmlFor="mode">Mode:</label>
-            <Select value={mode} onValueChange={setMode}>
-              <SelectTrigger id="mode">
-                <SelectValue placeholder="Select mode" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={MODES.FORMAT}>Format</SelectItem>
-                <SelectItem value={MODES.SUMMARIZE}>Summarize</SelectItem>
-                <SelectItem value={MODES.FORMAT_AS_EMAIL}>Format as Email</SelectItem>
-                <SelectItem value={MODES.FORMAT_AS_SLACK}>Format as Slack Message</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
 
         <div
           className={`input-area ${isDragging ? 'dragging' : ''}`}
