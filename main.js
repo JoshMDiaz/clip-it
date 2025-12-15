@@ -113,11 +113,19 @@ async function createWindow() {
 
   // Set icon if it exists (for development)
   try {
-    const iconPath = path.join(__dirname, 'assets', 'icon.png');
-    await fs.access(iconPath);
-    windowOptions.icon = iconPath;
+    let iconPath;
+    if (process.platform === 'win32') {
+      iconPath = path.join(__dirname, 'assets', 'icon.ico');
+      await fs.access(iconPath);
+      windowOptions.icon = iconPath;
+    } else {
+      // Use PNG for macOS and Linux
+      iconPath = path.join(__dirname, 'assets', 'icon.png');
+      await fs.access(iconPath);
+      windowOptions.icon = iconPath;
+    }
   } catch {
-    // Icon file doesn't exist, use default
+    // Icon file doesn't exist, use default Electron icon
   }
 
   mainWindow = new BrowserWindow(windowOptions);
@@ -142,6 +150,19 @@ async function createWindow() {
 }
 
 app.whenReady().then(() => {
+  // Set dock icon early (before creating window) for macOS
+  if (process.platform === 'darwin') {
+    try {
+      const dockIconPath = path.join(__dirname, 'assets', 'icon.png');
+      const fsSync = require('fs');
+      if (fsSync.existsSync(dockIconPath)) {
+        app.dock.setIcon(dockIconPath);
+      }
+    } catch (error) {
+      console.error('Failed to set dock icon:', error);
+    }
+  }
+
   createWindow();
 
   // Register global shortcut
