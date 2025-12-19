@@ -2,14 +2,9 @@
 // PROMPT TEMPLATES
 // ============================================================================
 // This file contains the prompt templates used to construct AI requests.
-// To add new formatting options:
-// 1. Add a new mode in the MODES object below
-// 2. Add corresponding prompt templates in the getPrompt function
-// 3. Update the UI dropdown options in App.jsx
 
 export const MODES = {
   FORMAT: 'Format',
-  SUMMARIZE: 'Summarize',
   FORMAT_AS_EMAIL: 'Format as Email',
   FORMAT_AS_SLACK: 'Format as Slack Message',
 }
@@ -22,90 +17,66 @@ export const TONES = {
 
 /**
  * Constructs the AI prompt based on mode and tone selections
- * @param {string} mode - The formatting mode (Format, Summarize, Format as Email)
- * @param {string} tone - The tone (Professional, Laid-back)
- * @param {string} userText - The text to format
- * @returns {string} The complete prompt for the AI endpoint
+ * @param {string} mode
+ * @param {string} tone
+ * @param {string} userText
+ * @returns {string}
  */
 export function getPrompt(mode, tone, userText) {
-  let toneDescription
+  let toneDescription = ''
+
   if (tone === TONES.PROFESSIONAL) {
     toneDescription =
-      'Use a tone that is professional, concise, and well-structured.'
+      'Use a professional tone: clear, direct, concise, neutral, and well-structured.'
   } else if (tone === TONES.CASUAL) {
-    toneDescription = 'Use a tone that is casual, friendly, and clear.'
+    toneDescription =
+      'Use a casual tone: friendly, natural, relaxed, and easy to read.'
   } else {
     // LAID_BACK
     toneDescription =
-      'Use a tone that is laid-back, approachable, and conversational.'
+      'Use a laid-back tone: conversational, approachable, informal but still clear.'
   }
 
   switch (mode) {
     case MODES.FORMAT:
-      return `You are a rewriting assistant. Rewrite the text to be cleaner, clearer, and better organized.
+      return `You are a message formatting assistant. Rewrite the text to improve clarity, organization, and readability while preserving the original meaning.
 
 ${toneDescription}
 
-Rules:
-
-- Do NOT change the meaning.
-
-- Do NOT add or remove ideas.
-
-- Do NOT summarize or expand.
-
-- Remove filler and repetition.
-
-- Do NOT add greetings or closings.
-
-- Return ONLY the rewritten text.
-
-Text:
-
-${userText}`
-
-    case MODES.SUMMARIZE:
-      return `You are a summarization assistant. Summarize the text into 2–3 sentences.
-
-${toneDescription}
+Guidelines:
+- Improve flow and structure
+- Break up long sentences when helpful
+- Use short paragraphs or bullet points if it improves clarity
+- Remove filler and repetition
 
 Rules:
-
-- Preserve key information only.
-
-- Do NOT include greetings or closings.
-
-- Do NOT add new content.
-
-- Return ONLY the summary.
+- Do NOT change the meaning
+- Do NOT add or remove ideas
+- Do NOT summarize or expand
+- Do NOT add greetings or closings
+- Return ONLY the rewritten text
 
 Text:
-
 ${userText}`
 
     case MODES.FORMAT_AS_EMAIL:
-      return `You are an email-formatting assistant. Convert the text into a well-structured email with:
-
-- A subject line
-
-- A greeting
-
-- A concise body (3–6 sentences unless necessary)
-
-- A closing
+      return `You are an email-formatting assistant. Convert the text into a clear, well-structured email.
 
 ${toneDescription}
 
+Email structure:
+- Subject line (short and specific)
+- Simple greeting
+- Clear, concise body
+- Minimal, polite closing
+
 Rules:
-
-- Do NOT add information not present in the original text.
-
-- Do NOT add unnecessary pleasantries.
-
-- Return ONLY the formatted email.
+- Do NOT add information not present in the original text
+- Avoid unnecessary pleasantries
+- Keep it scannable
+- Return ONLY the formatted email
 
 Text:
-
 ${userText}`
 
     case MODES.FORMAT_AS_SLACK:
@@ -113,37 +84,33 @@ ${userText}`
 
 ${toneDescription}
 
+Slack guidelines:
+- Keep it short and scannable
+- Use line breaks or bullet points when helpful
+- Optimize for quick reading
+- Use emoji or @mentions only if natural (max 1–2)
+
 Rules:
-
-- Keep it short and scannable.
-
-- Use @mentions or emoji only if natural (max 1–2).
-
-- No greetings or sign-offs.
-
-- No added information.
-
-- Return ONLY the Slack message.
+- No greetings or sign-offs
+- Do NOT add information
+- Do NOT change intent
+- Return ONLY the Slack message
 
 Text:
-
 ${userText}`
 
     default:
-      return `Rewrite the following text.
+      return `Rewrite the following text to improve clarity and organization.
 
 ${toneDescription}
 
 Rules:
-
-- Do NOT add greetings.
-
-- Do NOT add or remove ideas.
-
-- Return ONLY the rewritten text.
+- Preserve meaning
+- Do NOT add greetings
+- Do NOT add or remove ideas
+- Return ONLY the rewritten text
 
 Text:
-
 ${userText}`
   }
 }

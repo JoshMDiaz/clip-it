@@ -31,7 +31,7 @@ function App() {
   });
   const [mode, setMode] = useState(() => {
     const saved = localStorage.getItem('clip-mode');
-    return saved || MODES.SUMMARIZE;
+    return saved || MODES.FORMAT;
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -225,7 +225,6 @@ function App() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={MODES.FORMAT}>Format</SelectItem>
-                  <SelectItem value={MODES.SUMMARIZE}>Summarize</SelectItem>
                   <SelectItem value={MODES.FORMAT_AS_EMAIL}>Format as Email</SelectItem>
                   <SelectItem value={MODES.FORMAT_AS_SLACK}>Format as Slack Message</SelectItem>
                 </SelectContent>
